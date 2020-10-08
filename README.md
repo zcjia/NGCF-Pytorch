@@ -1,6 +1,8 @@
 # NGCF-Pytorch
 Pytorch implementation of NGCF
+
 This is a pytorch version of NGCF(Neural Graph Collaborative Filtering).
+
 We have used the same data processing code(data_process.py) of NGCF, thanks.
 
 # Environment Requirement

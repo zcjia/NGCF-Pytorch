@@ -38,13 +38,13 @@ class NGCF(nn.Module):
             self.GC_Linear_list.append(nn.Linear(self.weight_size[i], self.weight_size[i+1]))
             self.Bi_Linear_list.append(nn.Linear(self.weight_size[i], self.weight_size[i+1]))
             self.dropout_list.append(nn.Dropout(dropout_list[i]))
-        
+        '''
         for i in range(self.n_layers):
             nn.init.xavier_uniform_(self.GC_Linear_list[i].weight)
             nn.init.zeros_(self.GC_Linear_list[i].bias)
             nn.init.xavier_uniform_(self.Bi_Linear_list[i].weight)
             nn.init.zeros_(self.Bi_Linear_list[i].bias)
-
+        '''
         self.user_embedding = nn.Embedding(n_users, embedding_dim)
         self.item_embedding = nn.Embedding(n_items, embedding_dim)
 

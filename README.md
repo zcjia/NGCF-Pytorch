@@ -11,7 +11,7 @@ The code has been tested under python 3.7.6. The required packages are as follow
 * numpy == 1.18.1
 * scipy == 1.4.1
 
-You could run the demo by:
+# Run the demo
 ```
 python NGCF_recommendation.py
 ```
@@ -20,8 +20,9 @@ This code is using the gpu with the help of pytorch, but the training process is
 And I can't find out that why pytorch version slower so much compared with tensorflow version. I would apperacite a lot if you can issue it.
 
 
-The result is:
-
-
+# The result is:
+```
+400 epochs training: pre@10 0.06327 recall@10 0.10312, pre@20 0.04485 recall@20 0.14426
+```
 
 If this repo helps you, please star.(This will help me!)

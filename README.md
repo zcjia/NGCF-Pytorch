@@ -26,3 +26,5 @@ And I can't find out that why pytorch version slower so much compared with tenso
 ```
 
 If this repo helps you, please star.(This will help me!)
+
+uid 18736: pre@10 0.04582 recall@10 0.06161, pre@20 0.03526 recall@20 0.09270 ndcg@20 0.04278

@@ -12,7 +12,7 @@ from torch.nn import MSELoss
 from metrics import *
 import os
 import datetime
-os.environ['CUDA_VISIBLE_DEVICES'] = '0'
+os.environ['CUDA_VISIBLE_DEVICES'] = '3'
 
 
 batch_size = 4096
@@ -25,7 +25,7 @@ para = {
 
 
 def test(model, users_list):
-    all_precision_20, all_recall_20 = [], []
+    all_precision_20, all_recall_20, all_precision_10, all_recall_10 = [], [], [], []
     count = 0
     for j in range(BATCH_SIZE):
         id = users_list[np.random.randint(data.n_users, size=1)[0]]
@@ -39,15 +39,22 @@ def test(model, users_list):
         _, item_key = pred.sort(descending = True)
         item_key = item_key.cpu().int()
         item_top20 = item_key[:20]
+        item_top10 = item_key[:10]
         item_list = np.array(item_list)
         pred_top20 = item_list[item_top20]
+        pred_top10 = item_list[item_top10]
         actual = data.test_set[id]
         precision_20 = precisionk(actual, pred_top20)
         recall_20 = recallk(actual, pred_top20)
         all_precision_20.append(precision_20)
         all_recall_20.append(recall_20)
 
-    return np.mean(all_precision_20), np.mean(all_recall_20)
+        precision_10 = precisionk(actual, pred_top10)
+        recall_10 = recallk(actual, pred_top10)
+        all_precision_10.append(precision_10)
+        all_recall_10.append(recall_10)
+
+    return np.mean(all_precision_20), np.mean(all_recall_20), np.mean(all_precision_10), np.mean(all_recall_10)
 
 def main():
     model = NGCF(user_nums, item_nums, 64, [64, 64, 64], [0.1, 0.1, 0.1], norm_adj, 4096, 0.00001).cuda()
@@ -85,10 +92,10 @@ def main():
         t1 = time()
         print('one epoch consume %.2f s' % (t1-t0))
         user_to_test = list(data.test_set.keys())
-        precision_20, recall_20 = test(model, user_to_test)
+        precision_20, recall_20, precision_10, recall_10 = test(model, user_to_test)
         t2 = time()
         print('test time %.2f s' % (t2-t1))
-        str1 = 'epoch: %d %.2f=%.2f+%.2f %.5f %.5f' % (i, loss_value, mf_loss_value, reg_loss_value, precision_20, recall_20)
+        str1 = 'epoch: %d %.2f=%.2f+%.2f %.5f %.5f %.5f %.5f' % (i, loss_value, mf_loss_value, reg_loss_value, precision_20, recall_20, precision_10, recall_10)
         print(str1)
         
     
@@ -129,14 +136,9 @@ def main():
  
 
 
-def ensureDir(dir_path):
-    d = os.path.dirname(dir_path)
-    if not os.path.exists(d):
-        os.makedirs(d)
-
 if __name__ == '__main__':
     cur_dir = os.getcwd()  
-    path = str(cur_dir) + '/data/gowalla'
+    path = './data/Gowalla_make'
     data = Data(path, batch_size)
     #data.negative_pool()
     user_nums, item_nums = data.get_num_users_items()
